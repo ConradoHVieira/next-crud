@@ -2,22 +2,19 @@ import Botao from "../components/Botao"
 import Formulario from "../components/Formulario"
 import Layout from "../components/Layout"
 import Tabela from "../components/Tabela"
-import Cliente from "../core/Cliente"
+import useClientes from "../hooks/useClientes"
 
 export default function Home() {
-  const clientes = [
-    new Cliente('Ana', 14, '1'),
-    new Cliente('João', 35, '2'),
-    new Cliente('Pedro', 11, '3'),
-    new Cliente('Luiza', 52, '4'),
-  ]
-  function clienteSelecionado(cliente: Cliente) {
 
-  }
-
-  function clienteExcluido(cliente: Cliente) {
-
-  }
+  const {
+    cliente,
+    clientes,
+    salvarCliente,
+    novoCliente,
+    selecionarCliente,
+    excluirCliente,
+    tabelaVisivel,
+    exibirTabela } = useClientes()
   return (
     <div className={`
     flex justify-center items-center h-screen
@@ -25,14 +22,30 @@ export default function Home() {
     text-white
     `}>
       <Layout titulo="Cadastro de Usuário">
-        <div className="flex justify-end">
-          <Botao cor="green" className="mb-4">Novo Cliente</Botao>
-        </div>
-         <Tabela clientes={clientes}
-          clienteSelecionado={clienteSelecionado}
-          clienteExcluido={clienteExcluido}
-        />
-      <Formulario cliente={clientes[0]}></Formulario>
+        {tabelaVisivel ? (
+          <>
+            <div className="flex justify-end">
+              <Botao cor="green" className="mb-4"
+                onClick={novoCliente}>
+                Novo Cliente
+              </Botao>  
+            </div>
+            <Tabela clientes={clientes}
+              clienteSelecionado={selecionarCliente}
+              clienteExcluido={excluirCliente}
+
+            />
+          </>
+        ) : (
+          <Formulario
+            cliente={cliente}
+            clienteMudou={salvarCliente}
+            cancelado={exibirTabela}
+
+          />
+
+
+        )}
       </Layout>
 
     </div>
